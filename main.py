@@ -11,7 +11,12 @@ parser = argparse.ArgumentParser(
     prog="AM-Vision test",
     description="test am flow api",
 )
-parser.add_argument("-d", "--delete", action="store_true")
+parser.add_argument(
+    "-d",
+    "--delete",
+    action="store_true",
+    help="Delete previous batch and print objects",
+)
 
 
 def main():
@@ -22,7 +27,7 @@ def main():
         api.print.delete(id="bus")
         api.batch(1).delete()
 
-    # Check if the model was already uploaded
+    # Upload model if not already there
     response = api.design_reference.search.post({"id": "bus"})
     if not response["results"]:
         # upload stl model
@@ -34,18 +39,13 @@ def main():
     # define batch
     api.batch.post(batch)
 
-    # wait for assignment
-    assigned = False
-    while not assigned:
-        time.sleep(5)
-        print("checking assignment...")
-        res = api.scan_assignment.get(batch=batch["id"])
-        assigned = any(scan["print"] == "bus" for scan in res["results"])
-
-    # print date and time of assignment
-    assignment_created = [assignment["created"] for assignment in res["results"] if assignment["print"] == "bus"][0]
-
-    print("Part was assigned on: %s" % assignment_created)
+    # register webhook
+    api.webhook.post(
+        {
+            "event": "scan.assign",
+            "target": config["WEBHOOK_URL"],
+        }
+    )
 
 
 if __name__ == "__main__":

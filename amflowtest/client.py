@@ -11,7 +11,6 @@ class APISession(requests.Session):
     """Logging wrapper around requests session"""
 
     def request(self, method, url, **kwargs):
-
         start = time.time()
         response = super().request(method, url, **kwargs)
         duration = int(1000 * (time.time() - start))

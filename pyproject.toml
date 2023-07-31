@@ -8,6 +8,7 @@ authors = ["Domenico Nappo <domenico.nappo@gmail.com>"]
 python = "^3.10"
 slumber = "^0.7"
 python-dotenv = "^1.0"
+flask = "^2.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.4"
@@ -15,7 +16,7 @@ flake8 = "^6.0"
 black = "^23.7"
 isort = "^5.12"
 mypy = "^1.4"
-ipdb = "^0.13.13"
+ipdb = "^0.13"
 
 [tool.poetry.extras]
 dev = ["ipython"]
